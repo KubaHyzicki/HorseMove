@@ -6,15 +6,15 @@ class Square():
     square_image_path = "resources/square.jpg"
     horse_image_path = "resources/horse.jpg"
 
-    def __init__(self, sizeX, sizeY, init_colour, idx, idy):
-        self.idx = idx
-        self.idy = idy
+    def __init__(self, screen, x, y, sizeX, sizeY, init_colour):
+        self.screen = screen
+        self.x = x
+        self.y = y
         self.sizeX = sizeX
         self.sizeY = sizeY
+        self.colour = init_colour
         self.surface = pygame.Surface((sizeX, sizeY))
-        self.changeColour(init_colour)
-        # self.drawBorder()
-        self.loadSquareImage()
+        self.redraw()
 
     def changeColour(self, colour):
         self.colour = colour
@@ -37,11 +37,16 @@ class Square():
     def drawHorse(self):
         self.redraw()
         self.loadImage(self.horse_image_path)
+        self.update()
 
     def redraw(self):
-        self.surface.fill(pygame.Color(self.colour__empty))
         self.changeColour(self.colour)
-        # self.drawBorder()
-        # pygame.display.update()
         # Graphic square - alternative for manual border drawing
         # self.loadSquareImage()
+        self.drawBorder()
+        self.update()
+
+    def update(self, reload = False):
+        self.screen.blit(self.surface, (self.x, self.y))
+        if reload:
+            pygame.display.update()

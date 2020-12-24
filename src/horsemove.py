@@ -54,7 +54,6 @@ class HorseMove():
         # if currentSquare:
         #     currentSquare.
         targetSquare.drawHorse()
-        self.screen.blit(targetSquare.surface, (targetSquare.idx * self.draw.sizeX, targetSquare.idy * self.draw.sizeY))
         pygame.display.update()
 
     def makeMove(self, square):

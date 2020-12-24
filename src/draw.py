@@ -33,9 +33,9 @@ class Draw():
         for idy, y in enumerate(range(0, self.height, self.sizeY)):
             line = []
             for idx, x in enumerate(range(0, self.width, self.sizeX)):
-                square = Square(self.sizeX, self.sizeY, self.colour__default, idx, idy)
+                square = Square(self.screen, x, y, self.sizeX, self.sizeY, self.colour__default)
                 line.append(square)
-                self.screen.blit(square.surface, (x, y))
+                square.update()
             self.squares.append(line)
         pygame.display.update()
         logging.info("Board generated")
