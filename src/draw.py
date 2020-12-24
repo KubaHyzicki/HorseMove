@@ -1,9 +1,11 @@
+import logging
 import pygame
 import os
 from time import sleep
 
-class Button():
-
+class Square():
+    square_image_path = "resources/square.jpg"
+    horse_image_path = "resources/horse.jpg"
     def __init__(self, sizeX, sizeY, init_colour, idx, idy):
         self.idx = idx
         self.idy = idy
@@ -11,9 +13,9 @@ class Button():
         self.sizeY = sizeY
         self.surface = pygame.Surface((sizeX, sizeY))
         self.changeColour(init_colour)
-        self.drawBorder()
-        # #graphic square - alternative for manual border drawing
-        # self.loadSquare()
+        # self.drawBorder()
+        # Graphic square - alternative for manual border drawing
+        self.loadSquareImage()
 
     def changeColour(self, colour):
         self.colour = colour
@@ -22,12 +24,19 @@ class Button():
     def drawBorder(self):
         pygame.draw.rect(self.surface, (0,0,0), (0,0,self.sizeX,self.sizeY), 3)
 
-    def loadSquare(self):
-        image = pygame.image.load(os.path.abspath("resources/square.jpg"))
+    def loadImage(self, imagePath):
+        image = pygame.image.load(os.path.abspath(imagePath))
         image = pygame.transform.scale(image, (self.sizeX, self.sizeY))
         charImage = image.convert(image)
         charRect = pygame.Rect((0,0),(self.sizeX, self.sizeY))
         self.surface.blit(charImage, charRect)
+
+    def loadSquareImage(self):
+        self.loadImage(self.square_image_path)
+
+    def drawHorse(self):
+        self.loadImage(self.horse_image_path)
+
 
 class Draw():
     colour__possible_moves = (255,255,102)
@@ -53,13 +62,38 @@ class Draw():
 
 
     def generateBoard(self):
-        self.buttons = []
+        logging.info("Generating board")
+        self.squares = []
         for idy, y in enumerate(range(0, self.height, self.sizeY)):
             line = []
             for idx, x in enumerate(range(0, self.width, self.sizeX)):
-                button = Button(self.sizeX, self.sizeY, self.colour__default, idx, idy)
-                line.append(button)
-                self.screen.blit(button.surface, (x, y))
-        self.buttons.append(line)
+                square = Square(self.sizeX, self.sizeY, self.colour__default, idx, idy)
+                line.append(square)
+                self.screen.blit(square.surface, (x, y))
+            self.squares.append(line)
         pygame.display.update()
-        return self.buttons
+        logging.info("Board generated")
+        return self.squares
+
+    def mapSquare(self, mousePos):
+        x = mousePos[0]
+        y = mousePos[1]
+        min = 0
+        max = 0
+        logging.info("Mapping mouse pos ({},{}) to square".format(x,y))
+        for Y in range(self.Y):
+            max += self.sizeY
+            if y < max and y > min:
+                logging.debug("Mapped Y={}".format(Y))
+                min = 0
+                max = 0
+                for X in range(self.X):
+                    max += self.sizeX
+                    if x < max and x > min:
+                        logging.debug("Mapped X={}".format(X))
+                        logging.info("Returning square ({},{})".format(X,Y))
+                        return self.squares[Y][X]
+                    min += self.sizeX
+            min += self.sizeY
+        logging.warning("Mouse pos ({},{}) could not be mapped to any square!".format(x,y))
+        return False

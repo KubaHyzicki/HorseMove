@@ -17,7 +17,11 @@ def main():
     args = parse_arguments()
 
     if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
+        # logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+        # logging.getLogger().setLevel(logging.INFO)
 
     horsemove = HorseMove()
 
