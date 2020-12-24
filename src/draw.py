@@ -13,6 +13,7 @@ class Draw():
     colour__background = (204,229,255)
     X = 5
     Y = 7
+
     def __init__(self, screen, X = None, Y = None):
         self.screen = screen
         self.screen.fill(self.colour__background)

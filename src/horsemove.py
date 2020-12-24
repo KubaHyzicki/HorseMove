@@ -5,12 +5,10 @@ import pygame
 
 from src.draw import Draw
 
-# logging.basicConfig(level=logging.DEBUG)
-
 class HorseMove():
     title = 'Ruche(a)m Konia'
-    x = 5
-    y = 7
+    X = 5
+    Y = 7
     res = (720,720)
 
     def __init__(self):
@@ -18,8 +16,10 @@ class HorseMove():
         pygame.init()
         self.screen = pygame.display.set_mode(self.res)
         self.screen.fill((153,255,51))
+        pygame.display.set_caption(self.title)
         self.draw = Draw(self.screen)
         self.squares = self.draw.generateBoard()
+        self.moveHorse(self.startSquare)
         self.run()
 
     def run(self):
@@ -38,6 +38,24 @@ class HorseMove():
             except KeyboardInterrupt:
                 logging.info("Interrupted, exiting...")
                 pygame.quit()
+                break
+
+    @property
+    def startSquare(self):
+        if self.X % 2 == 0 or self.Y % 2 == 0:
+            logging.error("Board size should have odd parameters!")
+            exit(1)
+        if not self.squares:
+            logging.error("Squares are not yet defined!")
+            exit(1)
+        return self.squares[int((self.Y - 1) / 2)][int((self.X - 1) / 2)]
+
+    def moveHorse(self, targetSquare, currentSquare = None):
+        # if currentSquare:
+        #     currentSquare.
+        targetSquare.drawHorse()
+        self.screen.blit(targetSquare.surface, (targetSquare.idx * self.draw.sizeX, targetSquare.idy * self.draw.sizeY))
+        pygame.display.update()
 
     def makeMove(self, square):
         raise NotImplementedError
