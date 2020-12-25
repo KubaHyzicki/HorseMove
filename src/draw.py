@@ -30,10 +30,10 @@ class Draw():
     def generateBoard(self):
         logging.info("Generating board")
         self.squares = []
-        for idy, y in enumerate(range(0, self.height, self.sizeY)):
+        for id_y, y in enumerate(range(0, self.height, self.sizeY)):
             line = []
-            for idx, x in enumerate(range(0, self.width, self.sizeX)):
-                square = Square(self.screen, x, y, self.sizeX, self.sizeY, self.colour__default)
+            for id_x, x in enumerate(range(0, self.width, self.sizeX)):
+                square = Square(self.screen, id_x, id_y, x, y, self.sizeX, self.sizeY, self.colour__default)
                 line.append(square)
                 square.update()
             self.squares.append(line)
@@ -63,3 +63,20 @@ class Draw():
             min += self.sizeY
         logging.warning("Mouse pos ({},{}) could not be mapped to any square!".format(x,y))
         return False
+
+    def markAvailables(self, availableMoves):
+        if len(availableMoves) == 0:
+            return
+        for availableMove in availableMoves:
+            square = self.squares[availableMove[1]][availableMove[0]]
+            square.changeColour(self.colour__possible_moves)
+            square.update()
+        pygame.display.update()
+
+    def unmarkAvailables(self, availableMoves):
+        if len(availableMoves) == 0:
+            return
+        for availableMove in availableMoves:
+            square = self.squares[availableMove[1]][availableMove[0]]
+            square.changeColour(self.colour__default)
+            square.update()
